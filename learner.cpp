@@ -33,6 +33,19 @@
 
 namespace po = boost::program_options;
 
+std::istream& operator>> (std::istream& in, Learner::RegType& reg_type)
+{
+  std::string token;
+  in >> token;
+  if (token == "none")
+    reg_type = Learner::kRegNone;
+  else if (token == "l1")
+    reg_type = Learner::kRegL1;
+  else if (token == "l2")
+    reg_type = Learner::kRegL2;
+  return in;
+}
+
 
 Learner::Learner ()
 : options_ ("Allowed options", po::options_description::m_default_line_length)
@@ -91,8 +104,9 @@ Learner::Learner ()
       "regularization parameter")
     ("reg-interval", po::value<int> (&reg_interval_)->default_value (1000),
       "regularization will take place every arg updates")
-    ("reg-type,t", po::value<int> ()->default_value (Learner::kRegL2),
-      "regularization type (0=L1, 1=L2)")
+    ("reg-type,t", po::value<Learner::RegType> (&reg_type_)
+      ->default_value (Learner::kRegL2, "l2"),
+      "regularization type (none | l1 | l2)")
     ("verbosity", po::value<int> (), "verbosity level (0 ... 7)")
   ;
   options_.add (opt_general);
@@ -117,9 +131,6 @@ int Learner::Init (int argc, char ** argv)
   // Log level
   if (vm.count ("verbosity"))
     TinyLog::SetLevel (TinyLog::Level (vm["verbosity"].as<int> ()));
-
-  // Regularization type
-  reg_type_ = RegType (vm["reg-type"].as<int> ());
 
   return 0;
 }

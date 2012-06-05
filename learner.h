@@ -71,4 +71,6 @@ class Learner
     unsigned random_seed_;            // Random seed
 };
 
+std::istream& operator>> (std::istream& in, Learner::RegType& reg_type);
+
 #endif
