@@ -20,6 +20,7 @@
 // along with Sol.  If not, see <http://www.gnu.org/licenses/>.
 
 
+#include <cfloat>
 #include <cstdio>
 
 #include <iostream>
@@ -71,7 +72,7 @@ bool MultiClassLearner::SingleUpdate (const DataSet &data_set)
   // Find max margin violator
   int   max_class = target;
   float max_bias  = 0;
-  float max_score = 0;
+  float max_score = -FLT_MAX;
   for (int c = 0; c < model_.num_submodels (); ++c)
   {
     if (c == target)
