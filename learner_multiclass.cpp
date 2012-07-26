@@ -20,10 +20,10 @@
 // along with Sol.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <cfloat>
 #include <cstdio>
 
 #include <iostream>
+#include <limits>
 
 #include <boost/program_options.hpp>
 #include "tiny_log.h"
@@ -72,19 +72,19 @@ bool MultiClassLearner::SingleUpdate (const DataSet &data_set)
   // Find max margin violator
   int   max_class = target;
   float max_bias  = 0;
-  float max_score = -FLT_MAX;
+  float max_score = - std::numeric_limits<float>::max ();
   for (int c = 0; c < model_.num_submodels (); ++c)
   {
-    if (c == target)
-      continue;
-
-    float tmp_bias  = model_[c].bias ();
-    float tmp_score = model_[c].InnerProduct (data_set[index]) + tmp_bias;
-    if (max_score <= tmp_score)
+    if (c != target)
     {
-      max_class = c;
-      max_bias  = tmp_bias;
-      max_score = tmp_score;
+      float tmp_bias  = model_[c].bias ();
+      float tmp_score = model_[c].InnerProduct (data_set[index]) + tmp_bias;
+      if (max_score < tmp_score)
+      {
+        max_class = c;
+        max_bias  = tmp_bias;
+        max_score = tmp_score;
+      } 
     } 
   }
 
