@@ -31,8 +31,7 @@
 
 
 // TODO: if we define SparseVector as a template<Id, Value> we would
-// TODO: become independent of id_t and common.h as far as we can 
-// TODO: implement something like max_id etc.
+// TODO: become independent of id_t and common.h 
 class SparseVector
 {
   public:
@@ -40,19 +39,21 @@ class SparseVector
     typedef std::vector<elem_t>::const_iterator  const_iterator;
     typedef std::vector<elem_t>::const_reference const_reference;
 
+    SparseVector ();
     float target () const;                // Get target value
     void  set_target (float target);      // Set target value
     float squaredL2Norm () const;         // Get squared L2-norm
     int   size () const;                  // Get vector size
     id_t  max_id () const;                // Get maximum id
     void  push_back (const elem_t &elem); // Append component
+    float InnerProduct (const SparseVector &rhs) const; // inner product
     const_iterator begin () const;        // Iterator
     const_iterator end () const;          // Iterator
   private:
     std::vector<elem_t> vector_; // Vector data
     float target_;               // Target value
     float squaredL2Norm_;        // Squared L2-norm
-    
+    id_t  max_id_;               // Maximum id in vector
 };
 
 
@@ -82,16 +83,17 @@ inline int SparseVector::size () const
 
 inline id_t SparseVector::max_id () const
 {
-  return vector_.back ().first; // TODO: This is dirty. It only works because
-                                // TODO: we ensure it in sparse data format 
-                                // TODO: reader, but it's used in data set.
+  return max_id_;
 }
 
 
 inline void SparseVector::push_back (const SparseVector::elem_t &elem)
 {
+  // TODO: ensure increasing ids 
   vector_.push_back (elem);
   squaredL2Norm_ += elem.second * elem.second;
+  if (elem.first > max_id_)
+    max_id_ = elem.first;
 }
 
 

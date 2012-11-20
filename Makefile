@@ -21,7 +21,7 @@
 
 INC=-Itiny_log
 LIB=-Ltiny_log
-OBJS=learner.o weight_vector.o data_set.o model.o sparse_data_format.o
+OBJS=learner.o weight_vector.o data_set.o model.o sparse_data_format.o sparse_vector.o
 BINARIES=sol-bin sol-mucl sol-mulab
 
 CXXFLAGS=-O3 #-pg #-static 
