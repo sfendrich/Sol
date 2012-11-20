@@ -22,11 +22,24 @@
 INC=-Itiny_log
 LIB=-Ltiny_log
 OBJS=learner.o weight_vector.o data_set.o model.o sparse_data_format.o sparse_vector.o
-BINARIES=sol-bin sol-mucl sol-mulab
+BINARIES=tiny_log/libtiny_log.a sol-bin sol-mucl sol-mulab 
 
 CXXFLAGS=-O3 #-pg #-static 
 
 all: $(BINARIES)
+
+tiny_log/Makefile:
+	$(error "tiny_log/Makefile is missing. Please check if the\
+           submodules are initialized correctly in .gitmodules.\
+           If not, try 'make submodules'")
+
+tiny_log/libtiny_log.a: tiny_log/Makefile
+	cd tiny_log && make
+
+.PHONY: submodules
+submodules:
+	git submodule init
+	git submodule update
 
 sol-bin: binary.cpp learner_binary.o $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INC) $(LIB) -o $@ $^ -lboost_program_options -ltiny_log

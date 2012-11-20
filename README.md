@@ -40,18 +40,11 @@ Compilation
 
 *   Clone the github repository:
 
-        git clone git@github.com:sfendrich/sol.git
+        git clone https://github.com/sfendrich/sol.git
 
 *   Register and fetch submodules:
 
-        git submodule init
-        git submodule update
-
-*   Compile logging library:
-
-        cd tiny_log
-        make
-        cd ..
+        make submodules
 
 *   Compile sol:
 
